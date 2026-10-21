@@ -15,7 +15,7 @@ t_flow = t_settle + 100
 t_final = t_flow + 200
 
 dt = 0.001
-steps = int(t_final / dt)
+steps = round(t_final / dt)
 save_interval = 2000 
 
 # Parameters
@@ -42,6 +42,8 @@ c = L / 2 # center of the domain
 # loading initial conditions
 phi_U = np.load("state_U_tflow.npy")
 phi_P = np.load("state_P_tflow.npy")
+R0 = (3 * (phi_U > 0.5).sum() * dx**3 / (4 * np.pi))**(1/3)
+print("R0 =", R0)
 
 # Helper functions
 shape = (N, N, N)
@@ -129,7 +131,7 @@ denom_P = 1 + dt * L_P
 # external force
 std = 1.2
 F0 = 36
-R0 = 7.2 + 0.1       # from seeding file, update at next seed 
+R0 = R0 + 0.1       # from seeding file
 r = np.sqrt((Y - c)**2 + (Z - c)**2)
 g = np.exp(- (X - c)**2 / (2 * std**2)) * np.exp(- (r - R0)**2 / (2 * std**2))
 eps0 = 1e-8
@@ -195,8 +197,8 @@ for step in range(start_step, steps):
     KUx, KUy, KUz = korteweg(phi_U, mu_U_tilde)
     KPx, KPy, KPz = korteweg(phi_P, mu_P_tilde)
     Fx_tilde = fx_tilde + alpha * fft3(KUx + KPx)
-    Fy_tilde = fy_tilde + alpha *fft3(KUy + KPy)
-    Fz_tilde = fz_tilde + fft3(KUz + KPz)
+    Fy_tilde = fy_tilde + alpha * fft3(KUy + KPy)
+    Fz_tilde = fz_tilde + alpha * fft3(KUz + KPz)
     kdotF = (kx_d * Fx_tilde + ky_d * Fy_tilde + kz_d * Fz_tilde) / k2_safe
     vx = ifft3((Fx_tilde - kx_d * kdotF) / denom_v)
     vy = ifft3((Fy_tilde - ky_d * kdotF) / denom_v)
