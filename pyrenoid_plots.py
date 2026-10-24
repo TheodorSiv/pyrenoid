@@ -16,12 +16,16 @@ b        = float(params["b"])
 phi_c    = float(params["phi_c"])
 k_P      = float(params["k_P"])
 k_U      = float(params["k_U"])
-N        = int(params["N"])
+Nx        = int(params["Nx"])
+Ny        = int(params["Ny"])
+Nz        = int(params["Nz"])
 #vx       = params["vx"]
 #vy       = params["vy"]
 #vz       = params["vz"]
 x        = params["x"]
-c       = float(params["c"])
+cx       = float(params["cx"])
+cy      = float(params["cy"])
+cz      = float(params["cz"])
 
 
 # Frames
@@ -132,50 +136,50 @@ plt.legend()
 plt.savefig("snapshots/03_radius.png")
 
 
-# 4–6. Velocity field in xy, xz and yz planes, every 5th frame
-os.makedirs("snapshots/velocity", exist_ok=True)
-i = N // 2
-skip = 3 # skip every 3rd point for clarity
+# # 4–6. Velocity field in xy, xz and yz planes, every 5th frame
+# os.makedirs("snapshots/velocity", exist_ok=True)
+# i = N // 2
+# skip = 3 # skip every 3rd point for clarity
 
-for n in range(0, len(files), 5):
-    d = np.load(files[n])
-    if "vx" not in d.files:
-        continue
-    vx, vy, vz = d["vx"], d["vy"], d["vz"]
-    fU = d["U"]
-    t = float(d["t"])
+# for n in range(0, len(files), 5):
+#     d = np.load(files[n])
+#     if "vx" not in d.files:
+#         continue
+#     vx, vy, vz = d["vx"], d["vy"], d["vz"]
+#     fU = d["U"]
+#     t = float(d["t"])
 
-    # xy plane
-    plt.figure(figsize=(6, 6))
-    plt.quiver(x[::skip], x[::skip], vx[::skip, ::skip, i].T, vy[::skip, ::skip, i].T)
-    plt.contour(x, x, fU[:, :, i].T, levels=[0.5], colors="orange")
-    plt.gca().set_aspect("equal")
-    plt.xlabel("x"); plt.ylabel("y")
-    plt.title(f"Flow in xy plane, t = {t:.1f}")
-    plt.savefig(f"snapshots/velocity/xy_{n:04d}.png")
-    plt.close()
+#     # xy plane
+#     plt.figure(figsize=(6, 6))
+#     plt.quiver(x[::skip], x[::skip], vx[::skip, ::skip, i].T, vy[::skip, ::skip, i].T)
+#     plt.contour(x, x, fU[:, :, i].T, levels=[0.5], colors="orange")
+#     plt.gca().set_aspect("equal")
+#     plt.xlabel("x"); plt.ylabel("y")
+#     plt.title(f"Flow in xy plane, t = {t:.1f}")
+#     plt.savefig(f"snapshots/velocity/xy_{n:04d}.png")
+#     plt.close()
 
-    # xz plane
-    plt.figure(figsize=(6, 6))
-    plt.quiver(x[::skip], x[::skip], vx[::skip, i, ::skip].T, vz[::skip, i, ::skip].T)
-    plt.contour(x, x, fU[:, i, :].T, levels=[0.5], colors="orange")
-    plt.gca().set_aspect("equal")
-    plt.xlabel("x"); plt.ylabel("z")
-    plt.title(f"Flow in xz plane, t = {t:.1f}")
-    plt.savefig(f"snapshots/velocity/xz_{n:04d}.png")
-    plt.close()
+#     # xz plane
+#     plt.figure(figsize=(6, 6))
+#     plt.quiver(x[::skip], x[::skip], vx[::skip, i, ::skip].T, vz[::skip, i, ::skip].T)
+#     plt.contour(x, x, fU[:, i, :].T, levels=[0.5], colors="orange")
+#     plt.gca().set_aspect("equal")
+#     plt.xlabel("x"); plt.ylabel("z")
+#     plt.title(f"Flow in xz plane, t = {t:.1f}")
+#     plt.savefig(f"snapshots/velocity/xz_{n:04d}.png")
+#     plt.close()
 
-    # yz plane
-    plt.figure(figsize=(6, 6))
-    plt.quiver(x[::skip], x[::skip], vy[i, ::skip, ::skip].T, vz[i, ::skip, ::skip].T)
-    plt.contour(x, x, fU[i, :, :].T, levels=[0.5], colors="orange")
-    plt.gca().set_aspect("equal")
-    plt.xlabel("y"); plt.ylabel("z")
-    plt.title(f"Flow in yz plane, t = {t:.1f}")
-    plt.savefig(f"snapshots/velocity/yz_{n:04d}.png")
-    plt.close()
+#     # yz plane
+#     plt.figure(figsize=(6, 6))
+#     plt.quiver(x[::skip], x[::skip], vy[i, ::skip, ::skip].T, vz[i, ::skip, ::skip].T)
+#     plt.contour(x, x, fU[i, :, :].T, levels=[0.5], colors="orange")
+#     plt.gca().set_aspect("equal")
+#     plt.xlabel("y"); plt.ylabel("z")
+#     plt.title(f"Flow in yz plane, t = {t:.1f}")
+#     plt.savefig(f"snapshots/velocity/yz_{n:04d}.png")
+#     plt.close()
 
-    print(f"Velocity plots for frame {n} saved")
+#     print(f"Velocity plots for frame {n} saved")
 
 
 # 4. Velocity field in the xy plane
